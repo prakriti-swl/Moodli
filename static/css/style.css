@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    font-family: Poppins, sans-serif;
+    background: #f3f5ff;
+    color: #333;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: white;
+    box-shadow: 0 2px 8px #dcdcdc;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.profile-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 55px;
+    width: 160px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px #ccc;
+    padding: 10px 0;
+    display: none;
+}
+
+.dropdown div {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.dropdown div:hover {
+    background: #efefef;
+}
+
+/* HOME */
+.home {
+    text-align: center;
+    padding-top: 4rem;
+}
+
+.subtitle {
+    color: #666;
+}
+
+.log-btn {
+    margin-top: 20px;
+    background: #4a6cf7;
+    color: white;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+/* DASHBOARD */
+.dashboard {
+    padding: 2rem;
+}
+
+.card {
+    background: white;
+    margin: 1.5rem 0;
+    padding: 1.5rem 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 12px #e1e1e1;
+}
+
+/* WEEKLY CHART */
+canvas {
+    margin-top: 20px;
+}
+
+/* CALENDAR */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.calendar .day {
+    padding: 10px;
+    background: #eef0ff;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* POPUP */
+.popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.3);
+}
+
+.popup-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 340px;
+}
+
+.popup-card label {
+    display: block;
+    padding: 10px 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* MOOD COLORS */
+.dot {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.vh { background: #ffcf5b; }
+.h  { background: #66ea86; }
+.n  { background: #7db3ff; }
+.s  { background: #c1a0ff; }
+.vs { background: #ff7a7a; }
