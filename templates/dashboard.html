@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="dashboard">
+    <h2>Your Mood Dashboard</h2>
+
+    <div class="card">
+        <h3>Weekly Mood Trends</h3>
+        <canvas id="weeklyChart"></canvas>
+    </div>
+
+    <div class="card">
+        <h3>Monthly Mood Overview</h3>
+        <div id="calendarContainer" class="calendar"></div>
+    </div>
+
+    <div class="card">
+        <h3>Mood Indicator</h3>
+        <div class="legend">
+            <div><span class="dot vh"></span> Very Happy</div>
+            <div><span class="dot h"></span> Happy</div>
+            <div><span class="dot n"></span> Neutral</div>
+            <div><span class="dot s"></span> Sad</div>
+            <div><span class="dot vs"></span> Very Sad</div>
+        </div>
+    </div>
+
+    <div>
+        <a href="/" class="log-btn" style = "text-decoration: none;">Back to Home</a>
+        <button id="logMoodBtn" class="log-btn">
+            Log today’s mood
+        </button>
+    </div>
+</section>
+{% endblock %}

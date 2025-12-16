@@ -1,4 +1,4 @@
-// ------------------ UTIL ------------------
+// ================== UTIL ==================
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -14,98 +14,135 @@ function getCookie(name) {
     return cookieValue;
 }
 
-let csrfToken = getCookie("csrftoken");
+const csrfToken = getCookie("csrftoken");
 
 
-// ------------------ ELEMENTS ------------------
+// ================== ELEMENTS ==================
 const profileBtn = document.getElementById("profileMenuBtn");
 const dropdown = document.getElementById("profileDropdown");
 const usernameDisplay = document.getElementById("usernameDisplay");
-const dashboardSection = document.getElementById("dashboardSection");
-const homeSection = document.getElementById("homeSection");
 
-const logMoodBtn = document.getElementById("logMoodBtn");
 const moodPopup = document.getElementById("moodPopup");
 const moodForm = document.getElementById("moodForm");
+const closePopupBtn = document.getElementById("closePopup");
+
+let loggedIn = false;
+let chart = null;
 
 
-// ------------------ LOGIN STATE ------------------
-let loggedIn = false; 
-let weeklyData = [];
-
-// Simulate login if user has a Django session
+// ================== LOGIN STATE ==================
+// Simple session check (same behavior you had)
 fetch("/admin/", { method: "GET" })
     .then(res => {
-        if (res.redirected === false) {
+        if (!res.redirected) {
             loggedIn = true;
-            usernameDisplay.textContent = "User";
+            if (usernameDisplay) {
+                usernameDisplay.textContent = "User";
+            }
         }
         updateDropdown();
     });
 
 
-// ------------------ DROPDOWN ------------------
-profileBtn.onclick = () => {
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-};
+// ================== DROPDOWN ==================
+if (profileBtn) {
+    profileBtn.onclick = () => {
+        dropdown.classList.toggle("show");
+    };
+}
 
 function updateDropdown() {
+    if (!dropdown) return;
+
     dropdown.innerHTML = "";
 
     if (!loggedIn) {
         dropdown.innerHTML = `
-            <div onclick="window.location.href='/admin/login/'">Login</div>
+            <div onclick="handleDropdownAction('/admin/login/')">Login</div>
         `;
     } else {
         dropdown.innerHTML = `
-            <div onclick="showDashboard()">Dashboard</div>
-            <div onclick="window.location.href='/admin/logout/'">Logout</div>
+            <div onclick="handleDropdownAction('/dashboard/')">Dashboard</div>
+            <div onclick="handleDropdownAction('/admin/logout/')">Logout</div>
         `;
     }
 }
 
+function handleDropdownAction(action) {
+    dropdown.classList.remove("show");
+    setTimeout(() => {
+        window.location.href = action;
+    }, 200);
+}
 
-// ------------------ POPUP ------------------
-logMoodBtn.onclick = () => {
-    if (!loggedIn) {
-        alert("Please login first!");
-        return;
+
+// ================== CLOSE DROPDOWN ON OUTSIDE CLICK ==================
+document.addEventListener("click", (e) => {
+    if (profileBtn && dropdown &&
+        !profileBtn.contains(e.target) &&
+        !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
     }
-    moodPopup.classList.remove("hidden");
-};
+});
 
 
-// ------------------ SEND MOOD ------------------
-moodForm.onsubmit = function (e) {
-    e.preventDefault();
+// ================== POPUP ==================
+document.addEventListener("click", (e) => {
+    if (e.target.id === "logMoodBtn") {
+        if (!loggedIn) {
+            alert("Please login first!");
+            return;
+        }
+        moodPopup.classList.remove("hidden");
+    }
+});
 
-    const mood = document.querySelector("input[name='mood']:checked").value;
-
-    fetch("/api/log-mood/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken
-        },
-        body: JSON.stringify({ mood })
-    })
-    .then(res => res.json())
-    .then(() => {
+if (closePopupBtn) {
+    closePopupBtn.onclick = () => {
         moodPopup.classList.add("hidden");
-        loadWeeklyData();
-        loadMonthlyData();
-    });
-};
+    };
+}
 
 
-// ------------------ CHART ------------------
-let chart;
+// ================== SEND MOOD ==================
+if (moodForm) {
+    moodForm.onsubmit = function (e) {
+        e.preventDefault();
 
+        const selected = document.querySelector("input[name='mood']:checked");
+        if (!selected) return;
+
+        fetch("/api/log-mood/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({ mood: selected.value })
+        })
+        .then(res => res.json())
+        .then(() => {
+            moodPopup.classList.add("hidden");
+
+            // Reload charts if on dashboard page
+            if (document.getElementById("weeklyChart")) {
+                loadWeeklyData();
+                loadMonthlyData();
+            }
+        });
+    };
+}
+
+
+// ================== WEEKLY CHART ==================
 function loadWeeklyData() {
     fetch("/api/weekly/")
         .then(res => res.json())
         .then(data => {
-            let moodColors = {
+            const ctx = document.getElementById("weeklyChart");
+            if (!ctx) return;
+
+            const moodColors = {
                 "Very Happy": "#ffcf5b",
                 "Happy": "#66ea86",
                 "Neutral": "#7db3ff",
@@ -113,19 +150,17 @@ function loadWeeklyData() {
                 "Very Sad": "#ff7a7a"
             };
 
-            weeklyData = data.map(m => moodColors[m.mood]);
-
-            let ctx = document.getElementById("weeklyChart");
+            const colors = data.map(m => moodColors[m.mood]);
 
             if (chart) chart.destroy();
 
             chart = new Chart(ctx, {
                 type: "bar",
                 data: {
-                    labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+                    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
                     datasets: [{
-                        backgroundColor: weeklyData,
-                        data: new Array(weeklyData.length).fill(1)
+                        data: new Array(colors.length).fill(1),
+                        backgroundColor: colors
                     }]
                 },
                 options: {
@@ -137,15 +172,17 @@ function loadWeeklyData() {
 }
 
 
-// ------------------ MONTHLY CALENDAR ------------------
+// ================== MONTHLY CALENDAR ==================
 function loadMonthlyData() {
     fetch("/api/monthly/")
         .then(res => res.json())
         .then(data => {
             const container = document.getElementById("calendarContainer");
+            if (!container) return;
+
             container.innerHTML = "";
 
-            let moodColors = {
+            const moodColors = {
                 "Very Happy": "#ffcf5b",
                 "Happy": "#66ea86",
                 "Neutral": "#7db3ff",
@@ -153,34 +190,32 @@ function loadMonthlyData() {
                 "Very Sad": "#ff7a7a"
             };
 
-            let moodByDay = {};
+            const moodByDay = {};
             data.forEach(entry => {
-                let day = parseInt(entry.date.split("-")[2]);
+                const day = parseInt(entry.date.split("-")[2]);
                 moodByDay[day] = moodColors[entry.mood];
             });
 
-            let daysInMonth = 30;  
+            const daysInMonth = 30;
 
             for (let i = 1; i <= daysInMonth; i++) {
-                let div = document.createElement("div");
+                const div = document.createElement("div");
                 div.className = "day";
                 div.textContent = i;
 
                 if (moodByDay[i]) {
                     div.style.background = moodByDay[i];
                 }
-
                 container.appendChild(div);
             }
         });
 }
 
 
-// ------------------ SHOW DASHBOARD ------------------
-function showDashboard() {
-    homeSection.classList.add("hidden");
-    dashboardSection.classList.remove("hidden");
-
-    loadWeeklyData();
-    loadMonthlyData();
-}
+// ================== AUTO LOAD DASHBOARD DATA ==================
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("weeklyChart")) {
+        loadWeeklyData();
+        loadMonthlyData();
+    }
+});

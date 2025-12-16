@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import date, timedelta
 
 from .models import MoodLog
@@ -10,7 +11,12 @@ from .serializers import MoodLogSerializer
 
 # ---------------- HOME PAGE ----------------
 class HomeView(TemplateView):
-    template_name = "index.html"
+    template_name = "home.html"
+
+
+class DashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "dashboard.html"
+    login_url = "/admin/login/"
 
 
 # ---------------- LOG MOOD ----------------

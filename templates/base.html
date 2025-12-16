@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodli</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">😊 Mood Tracker</div>
+
+    <div class="profile-wrapper">
+        <img src="https://i.pravatar.cc/40"
+             class="profile-pic"
+             id="profileMenuBtn">
+
+        <div class="dropdown" id="profileDropdown"></div>
+    </div>
+</header>
+
+{% block content %}{% endblock %}
+
+{% include "popup.html" %}
+
+<script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
