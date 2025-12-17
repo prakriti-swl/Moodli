@@ -7,6 +7,7 @@ body {
 
 /* NAVBAR */
 .navbar {
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     padding: 1rem 2rem;
@@ -32,6 +33,7 @@ body {
 }
 
 .dropdown {
+    z-index: 1100;
     position: absolute;
     right: 0;
     top: 55px;
@@ -69,20 +71,66 @@ body {
     padding-top: 4rem;
 }
 
-.subtitle {
+.intro {
+    display: flex;
+    z-index: 1;
+    width: 88%;
+    height: 60vh;
+    background: #fffff6;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    margin: auto;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+}
+
+.intro-left, .intro-right {
+    flex: 1; /* each takes half */
+    display: flex;
+}
+
+.intro-left {
+    justify-content: center; /* horizontally center GIF */
+    align-items: center;     /* vertically center GIF */
+}
+
+.intro-left img {
+    width: 300px;      /* reduce size */
+    height: auto;      /* keep proportions */
+    max-width: 100%;
+}
+
+
+.intro-right {
+    flex-direction: column;      /* stack elements vertically */
+    justify-content: center;     /* vertical centering */
+    align-items: center;     /* left align content */
+    padding-left: 2rem;
+    gap: 1rem;                   /* spacing between items */
+}
+
+
+.intro-right h2 {
+    font-size: 2.2rem;   /* increase heading size */
+    font-weight: 700;
+}
+
+.intro-right .subtitle {
+    font-size: 1.3rem;   /* increase paragraph size */
+    font-weight: 500;
     color: #666;
 }
+
 
 .log-btn {
     margin-top: 20px;
     background: #4a6cf7;
     color: white;
-    padding: 12px 26px;
+    padding: 10px 26px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
     font-size: 1.1rem;
-    gap: 1rem;
 }
 
 /* CLOSE BUTTON */ 
@@ -140,23 +188,72 @@ canvas {
     justify-content: center;
     align-items: center;
     background: rgba(0,0,0,0.3);
+    z-index: 5000;
 }
 
 .popup-card {
-    background: white;
+    background: rgb(232, 240, 248);
     position: relative;
     padding: 2rem;
     border-radius: 15px;
     width: 340px;
+    z-index: 5100;
 }
 
 .popup-card label {
     display: block;
     padding: 10px 0;
+    border: #333;
 }
 
 .hidden {
     display: none !important;
+}
+
+.popup-title {
+  font-weight: 700;
+  font-size: 1.9rem;
+  margin-bottom: 0.5rem;
+  color: #1e1e2f;
+}
+
+.popup-divider {
+  height: 4px; /* thickness */
+  width: 100%;  /* full width of popup card */
+  background: repeating-linear-gradient(
+    to right,
+    #888,      /* dash color: slightly darker gray */
+    #888 50px, /* dash length */
+    transparent 50px,
+    transparent 70px /* gap between dashes */
+  );
+  margin: 0.5rem 0 1.5rem 0;
+  border: none;
+}
+
+
+.popup-subtitle {
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #3a3a57;
+}
+
+.mood-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fffffff6;
+  border-radius: 12px;
+  margin: 10px;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.mood-option:hover {
+  background-color: #c4cdf5;
 }
 
 /* MOOD COLORS */

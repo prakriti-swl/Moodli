@@ -1,12 +1,23 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <section class="home">
-    <h2>Hello, <span id="usernameDisplay">Guest</span>!</h2>
-    <p class="subtitle">How are you feeling today?</p>
+    <div class="intro">
+        <div class="intro-left">
+            <!-- GIF placeholder -->
+            <img src="{% static 'img/moodgif.gif' %}" alt="Mood GIF" class="intro-gif">
+        </div>
+        <div class="intro-right">
+            <div class="intro-content">
+                <h2>Hello, <span id="usernameDisplay">Guest</span>!</h2>
+                <p class="subtitle">How are you feeling today?</p>
 
-    <button id="logMoodBtn" class="log-btn">
-        Log today’s mood
-    </button>
+                <button id="logMoodBtn" class="log-btn">
+                    Log today’s mood
+                </button>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}
