@@ -160,9 +160,50 @@ body {
     box-shadow: 0 5px 12px #e1e1e1;
 }
 
+/* CHOOSE DATE */
+.date {
+    margin: 20px 0;
+}
+.date label{
+    font-size: larger;
+    margin-bottom: 10px;
+}
+
+.date input{
+    padding: 5px;
+    border-radius: 8px;
+    text-align: center;
+    background-color: #fffff6fa;
+}
+
+.date button{
+    padding: 5px;
+    width: 60px;
+}
+
 /* WEEKLY CHART */
 canvas {
     margin-top: 20px;
+}
+
+#weeklyChartWrapper {
+    overflow-x: auto;
+    width: 95%; 
+    margin: 0 auto;  /* Centers the chart container */
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+#weeklyChart {
+    width: 100%;  /* Make canvas responsive */
+    height: 400px;  /* Set the height */
+    min-width: 800px;  /* Optional: ensures the chart doesn't shrink below 800px */
+}
+
+/* MOOD COUNT */
+#moodCountContainer{
+    margin: 30px;
+    /* width: 60px; */
 }
 
 /* CALENDAR */

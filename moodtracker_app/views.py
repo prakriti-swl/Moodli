@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.mixins import LoginRequiredMixin
 from datetime import date, timedelta
+from django.utils import timezone
+
 
 from .models import MoodLog
 from .serializers import MoodLogSerializer
@@ -41,13 +43,16 @@ class WeeklyMoodAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        today = date.today()
-        week_ago = today - timedelta(days=7)
+        today = timezone.localdate()
+
+        # Monday of current week
+        monday = today - timedelta(days=today.weekday())
+        sunday = monday + timedelta(days=6)
 
         logs = MoodLog.objects.filter(
             user=request.user,
-            date__gte=week_ago
-        )
+            date__range=[monday, sunday]
+        ).order_by("date")
 
         serializer = MoodLogSerializer(logs, many=True)
         return Response(serializer.data)

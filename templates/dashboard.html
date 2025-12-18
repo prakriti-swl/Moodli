@@ -3,11 +3,19 @@
 {% block content %}
 <section class="dashboard">
     <h2>Your Mood Dashboard</h2>
+    <div class = "date">
+        <label for="chartDate">Choose date:</label> <br>
+        <input type="date" id="chartDate" />
+        <button id="loadChartBtn">Load</button>
+    </div>
 
-    <div class="card">
-        <h3>Weekly Mood Trends</h3>
+   <div id="weeklyChartWrapper"
+        style="overflow-x:auto; width:100%; border:1px solid #ddd;">
         <canvas id="weeklyChart"></canvas>
     </div>
+
+
+    <div id="moodCountContainer"></div>
 
     <div class="card">
         <h3>Monthly Mood Overview</h3>
