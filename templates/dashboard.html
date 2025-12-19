@@ -4,9 +4,9 @@
 <section class="dashboard">
     <h2>Your Mood Dashboard</h2>
     <div class = "date">
-        <label for="chartDate">Choose date:</label> <br>
+        <label for="chartDate">Choose date ❤️ :</label> <br>
         <input type="date" id="chartDate" />
-        <button id="loadChartBtn">Load</button>
+        <button id="loadChartBtn">Open</button>
     </div>
 
    <div id="weeklyChartWrapper"
@@ -15,7 +15,12 @@
     </div>
 
 
+    <!-- Mood Count Doughnut Chart -->
+    {% comment %} <canvas id="moodCountChart" width="100" height="100"></canvas> {% endcomment %}
+
+    <!-- Mood Count Badges Below the Chart -->
     <div id="moodCountContainer"></div>
+
 
     <div class="card">
         <h3>Monthly Mood Overview</h3>

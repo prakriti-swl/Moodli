@@ -16,11 +16,19 @@
     <div class="logo">😊 Moodli </div>
 
     <div class="profile-wrapper">
+        {% if user.is_authenticated %}
+            <a href="{% url 'home' %}" style= " color: black; text-decoration : none; margin : 0 20px;" >Home</a>
+            <a href="{% url 'daily-moods' %}" style= " color: black; text-decoration : none; margin : 0 20px" >Daily Moods</a>
+            <a href="{% url 'dashboard' %}" style= " color: black; text-decoration : none; margin : 0 10px" >Dashboard</a>
+            <a href="{% url 'logout' %}" style= " color: black; text-decoration : none; margin : 0 20px" >Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" style= " color: black;  text-decoration : none; margin : 0 10px" >Login</a>
+            <a href="{% url 'signup' %}" style= "color:black; text-decoration : none; margin : 0 20px" >Sign Up</a>
+        {% endif %}
+
         <img src="https://i.pravatar.cc/40"
              class="profile-pic"
              id="profileMenuBtn">
-
-        <div class="dropdown" id="profileDropdown"></div>
     </div>
 </header>
 
@@ -31,3 +39,4 @@
 <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
+

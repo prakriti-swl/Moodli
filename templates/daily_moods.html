@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load tz %}
+
+{% block content %}
+<section class="mood-list-container">
+    <h2 class="mood-title">Daily Moods</h2>
+
+    {% for group in grouped_moods %}
+        <div class="mood-day">
+            <div class="mood-date">
+                {{ group.date|date:"F j, Y" }}
+            </div>
+
+            <div class="mood-cards">
+                {% for mood in group.moods %}
+                    <div class="mood-card {{ mood.mood|lower|slugify }}">
+                        <div class="mood-left">
+                            <!-- Emoji and mood title -->
+                            <div class="mood-icon">
+                                {% if mood.mood == "Very Happy" %}😁
+                                {% elif mood.mood == "Happy" %}🙂
+                                {% elif mood.mood == "Neutral" %}😐
+                                {% elif mood.mood == "Sad" %}🙁
+                                {% elif mood.mood == "Very Sad" %}😢
+                                {% endif %}
+                            </div>
+                            <div class="mood-info">
+                                <span class="mood-label">{{ mood.mood }}</span>
+                            </div>
+                        </div>
+                        <!-- Time displayed on the right side -->
+                        <div class="mood-time">
+                            {% if mood.date %}
+                                {{ mood.date|localtime|time:"h:i A" }}
+                            {% endif %}
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% empty %}
+        <p class="empty-state">No mood data available.</p>
+    {% endfor %}
+</section>
+{% endblock %}

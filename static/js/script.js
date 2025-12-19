@@ -171,7 +171,7 @@ const dateDividerPlugin = {
     }
 };
 
-// WEEKLY DATA
+// WEEKLY CHART
 function loadWeeklyData(selectedDate = new Date()) {
     fetch("/api/weekly/")
     .then(res => res.json())
@@ -181,7 +181,7 @@ function loadWeeklyData(selectedDate = new Date()) {
 
         data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // Calculate week range (Monday → Sunday) based on selected date
+        // Calculate the start and end of the week based on the selected date
         const dayOfWeek = selectedDate.getDay();
         const monday = new Date(selectedDate);
         monday.setDate(selectedDate.getDate() - ((dayOfWeek + 6) % 7));
@@ -190,7 +190,7 @@ function loadWeeklyData(selectedDate = new Date()) {
         const sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
 
-        // Filter data for that week only
+        // Filter data for the selected week
         const weeklyData = data.filter(log => {
             const d = new Date(log.date);
             return d >= monday && d <= sunday;
@@ -202,7 +202,7 @@ function loadWeeklyData(selectedDate = new Date()) {
         const values = weeklyData.map(log => moodValues[log.mood]);
         const colors = weeklyData.map(log => getMoodColor(moodValues[log.mood]));
 
-        // Mood count
+        // Mood count for the week
         const moodCount = {
             "Very Sad": 0,
             "Sad": 0,
@@ -214,6 +214,7 @@ function loadWeeklyData(selectedDate = new Date()) {
             if (moodCount.hasOwnProperty(log.mood)) moodCount[log.mood]++;
         });
 
+        // If there's already an existing chart, destroy it before creating a new one
         if (chart) chart.destroy();
 
         chart = new Chart(ctx, {
@@ -287,6 +288,7 @@ function loadWeeklyData(selectedDate = new Date()) {
 }
 
 
+//MONTHLY CHART
 function loadMonthlyData(selectedDate = new Date()) {
     fetch("/api/monthly/")
     .then(res => res.json())
@@ -297,6 +299,13 @@ function loadMonthlyData(selectedDate = new Date()) {
 
         const selectedMonth = selectedDate.getMonth();
         const selectedYear = selectedDate.getFullYear();
+
+        // Display the month and year
+        const monthName = selectedDate.toLocaleString('default', { month: 'long' });
+        const year = selectedDate.getFullYear();
+        const monthTitle = document.createElement("h4");
+        monthTitle.textContent = `${monthName} ${year}`;
+        container.insertBefore(monthTitle, container.firstChild);
 
         const logsPerDay = {};
         data.forEach(entry => {
@@ -324,6 +333,7 @@ function loadMonthlyData(selectedDate = new Date()) {
         }
     });
 }
+
 
 // ================== AUTO LOAD DASHBOARD DATA ==================
 document.addEventListener("DOMContentLoaded", () => {

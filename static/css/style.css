@@ -65,6 +65,141 @@ body {
     background: #efefef;
 }
 
+
+/* LOGIN */
+.auth-container {
+    position: absolute;
+    border-radius: 20px;
+    top: 25%; 
+    left: 50%;
+    transform: translateX(-50%); /* This centers the box horizontally */
+    width: 30%; 
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h2 {
+    text-align: center;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.auth-container input {
+    margin: 0 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 65%;
+}
+
+.auth-container button {
+    font-size: larger;
+    background-color: #3a5ce6 ;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-container button:hover {
+    background-color:#5776f3;
+}
+
+
+/* Daily moods */
+.mood-list-container {
+    max-width: 95%;  /* Fixed width */
+    margin: 80px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.mood-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Date header */
+.mood-date {
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    margin: 20px 0 10px;
+}
+
+/* Mood cards container */
+.mood-cards {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mood card */
+.mood-card {
+    display: flex;
+    justify-content: space-between;  /* Space between mood info and time */
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #f4f4f4;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
+}
+
+.mood-card:hover {
+    transform: scale(1.02);
+}
+
+/* Left side: Emoji and mood title */
+.mood-left {
+    display: flex;
+    align-items: center;
+}
+
+.mood-icon {
+    padding: 8px;
+    font-size: 26px;
+    margin-right: 14px;
+}
+
+/* Mood label */
+.mood-info .mood-label {
+    padding: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Time on the right */
+.mood-time {
+    font-size: 14px;
+    color: #999;
+    margin-left: 10px;
+    min-width: 60px;
+    text-align: right; /* Aligns the time to the right */
+}
+
+/* Darker mood colors */
+.mood-card.very-happy { background: #c6f7d7; }
+.mood-card.happy { background: #c9e8ff; }
+.mood-card.neutral { background: #e5e5e5; }
+.mood-card.sad { background: #f9d5b7; }
+.mood-card.very-sad { background: #f7b7b7; }
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+
+
 /* HOME */
 .home {
     text-align: center;
@@ -122,6 +257,7 @@ body {
 }
 
 
+/* log mood */
 .log-btn {
     margin-top: 20px;
     background: #4a6cf7;
