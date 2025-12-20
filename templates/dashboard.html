@@ -9,14 +9,16 @@
         <button id="loadChartBtn">Open</button>
     </div>
 
-   <div id="weeklyChartWrapper"
-        style="overflow-x:auto; width:100%; border:1px solid #ddd;">
-        <canvas id="weeklyChart"></canvas>
+   <!-- Weekly Chart -->
+    <div id="weeklyChartWrapper">
+        <canvas id="weeklyChart" width="100%" height="400"></canvas>
     </div>
 
-
     <!-- Mood Count Doughnut Chart -->
-    {% comment %} <canvas id="moodCountChart" width="100" height="100"></canvas> {% endcomment %}
+    <div class="mood-count-chart">
+        <canvas id="moodCountChart" width="600" height="600"></canvas>
+        <div id="totalMoodCount" class="mood-count-total" style="margin-top: 20px; font-size: 26px; font-weight: bold;"></div>
+    </div>
 
     <!-- Mood Count Badges Below the Chart -->
     <div id="moodCountContainer"></div>
@@ -24,6 +26,13 @@
 
     <div class="card">
         <h3>Monthly Mood Overview</h3>
+        <!-- Calendar Header: Month and Year -->
+        <div id="calendarHeader">
+            <button id="prevMonthBtn">←</button>
+            <h4 id="calendarMonthYear"></h4>
+            <button id="nextMonthBtn">→</button>
+        </div>
+        <!-- Calendar Grid -->
         <div id="calendarContainer" class="calendar"></div>
     </div>
 
@@ -39,7 +48,7 @@
     </div>
 
     <div>
-        <a href="/" class="log-btn" style = "text-decoration: none;">Back to Home</a>
+        <button class="log-btn"><a href="/"  style = "text-decoration: none; color:white;">Back to Home</a></button>
         <button id="logMoodBtn" class="log-btn">
             Log today’s mood
         </button>
