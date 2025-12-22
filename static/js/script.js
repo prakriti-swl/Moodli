@@ -19,26 +19,26 @@ const csrfToken = getCookie("csrftoken");
 // ================== ELEMENTS ==================
 const profileBtn = document.getElementById("profileMenuBtn");
 const dropdown = document.getElementById("profileDropdown");
-const usernameDisplay = document.getElementById("usernameDisplay");
+// const usernameDisplay = document.getElementById("usernameDisplay");
 
 const moodPopup = document.getElementById("moodPopup");
 const moodForm = document.getElementById("moodForm");
 const closePopupBtn = document.getElementById("closePopup");
 
-let loggedIn = false;
+// let loggedIn = false;
 let chart = null;
 
 // ================== LOGIN STATE ==================
-fetch("/admin/", { method: "GET" })
-    .then(res => {
-        if (!res.redirected) {
-            loggedIn = true;
-            if (usernameDisplay) {
-                usernameDisplay.textContent = "User";
-            }
-        }
-        updateDropdown();
-    });
+// fetch("/admin/", { method: "GET" })
+//     .then(res => {
+//         if (!res.redirected) {
+//             loggedIn = true;
+//             if (usernameDisplay) {
+//                 usernameDisplay.textContent = "User";
+//             }
+//         }
+//         updateDropdown();
+//     });
 
 // ================== DROPDOWN ==================
 if (profileBtn) {
@@ -47,29 +47,29 @@ if (profileBtn) {
     };
 }
 
-function updateDropdown() {
-    if (!dropdown) return;
+// function updateDropdown() {
+//     if (!dropdown) return;
 
-    dropdown.innerHTML = "";
+//     dropdown.innerHTML = "";
 
-    if (!loggedIn) {
-        dropdown.innerHTML = `
-            <div onclick="handleDropdownAction('/admin/login/')">Login</div>
-        `;
-    } else {
-        dropdown.innerHTML = `
-            <div onclick="handleDropdownAction('/dashboard/')">Dashboard</div>
-            <div onclick="handleDropdownAction('/admin/logout/')">Logout</div>
-        `;
-    }
-}
+//     if (!loggedIn) {
+//         dropdown.innerHTML = `
+//             <div onclick="handleDropdownAction('/admin/login/')">Login</div>
+//         `;
+//     } else {
+//         dropdown.innerHTML = `
+//             <div onclick="handleDropdownAction('/dashboard/')">Dashboard</div>
+//             <div onclick="handleDropdownAction('/admin/logout/')">Logout</div>
+//         `;
+//     }
+// }
 
-function handleDropdownAction(action) {
-    dropdown.classList.remove("show");
-    setTimeout(() => {
-        window.location.href = action;
-    }, 200);
-}
+// function handleDropdownAction(action) {
+//     dropdown.classList.remove("show");
+//     setTimeout(() => {
+//         window.location.href = action;
+//     }, 200);
+// }
 
 // ================== CLOSE DROPDOWN ON OUTSIDE CLICK ==================
 document.addEventListener("click", (e) => {
@@ -83,10 +83,10 @@ document.addEventListener("click", (e) => {
 // ================== POPUP ==================
 document.addEventListener("click", (e) => {
     if (e.target.id === "logMoodBtn") {
-        if (!loggedIn) {
-            alert("Please login first!");
-            return;
-        }
+        // if (!loggedIn) {
+        //     alert("Please login first!");
+        //     return;
+        // }
         moodPopup.classList.remove("hidden");
     }
 });

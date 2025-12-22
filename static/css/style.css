@@ -66,21 +66,39 @@ body {
 }
 
 
-/* LOGIN */
+/* LOGIN and SIGNUP */
+
+/* Login and signup page background */
+.auth-page {
+    min-height: calc(100vh - 70px); /* minus navbar height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.3)
+    ),
+    url("/static/img/emoji.jpg") no-repeat center center/cover;
+}
+
+
 .auth-container {
     position: absolute;
     border-radius: 20px;
     top: 25%; 
     left: 50%;
     transform: translateX(-50%); /* This centers the box horizontally */
-    width: 30%; 
-    padding: 20px;
-    background-color: #fff;
+    width: 35%; 
+    height: 45%;
+    padding: 40px;
+    background-color: #ffffffee;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .auth-container h2 {
     text-align: center;
+    font-size: 26px;
 }
 
 .auth-container form {
@@ -89,12 +107,18 @@ body {
     gap: 1rem;
 }
 
+.auth-container label{
+    font-size: 20px;
+}
+
 .auth-container input {
     margin: 0 10px;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px;
     width: 65%;
+    height: auto;
+    font-size: 18px;
 }
 
 .auth-container button {
@@ -103,7 +127,7 @@ body {
     color: white;
     border: none;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -111,12 +135,16 @@ body {
     background-color:#5776f3;
 }
 
+.auth-container a:hover {
+    font-weight: bolder;
+    color: #3a5ce6;
+}
 
 /* Daily moods */
 .mood-list-container {
-    max-width: 95%;  /* Fixed width */
-    margin: 80px auto;
-    padding: 20px;
+    width: 90%;  
+    margin: 70px auto;
+    padding: 30px;
     background: #ffffff;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);

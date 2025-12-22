@@ -16,8 +16,10 @@ from datetime import datetime
 import pytz
 
 # -------------------- Home Page -------------------
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "home.html"
+    login_url = "/login/"
+
 
 # -------------------- Login View -------------------
 class LoginView(View):

@@ -5,17 +5,32 @@
 <section class="home">
     <div class="intro">
         <div class="intro-left">
-            <!-- GIF placeholder -->
             <img src="{% static 'img/moodgif.gif' %}" alt="Mood GIF" class="intro-gif">
         </div>
+
         <div class="intro-right">
             <div class="intro-content">
-                <h2>Hello, <span id="usernameDisplay">Guest</span>!</h2>
+                <h2>
+                    Hello,
+                    {% if user.is_authenticated %}
+                        {{ user.username }}
+                    {% else %}
+                        Guest
+                    {% endif %}
+                    !
+                </h2>
+
                 <p class="subtitle">How are you feeling today?</p>
 
-                <button id="logMoodBtn" class="log-btn">
-                    Log today’s mood
-                </button>
+                {% if user.is_authenticated %}
+                    <button id="logMoodBtn" class="log-btn">
+                        Log today’s mood
+                    </button>
+                {% else %}
+                    <a href="{% url 'login' %}" class="log-btn">
+                        Login to log mood
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

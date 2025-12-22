@@ -37,7 +37,9 @@
 
 {% block content %}{% endblock %}
 
-{% include "popup.html" %}
+{% if user.is_authenticated %}
+    {% include "popup.html" %}
+{% endif %}
 
 <script src="{% static 'js/script.js' %}"></script>
 </body>
