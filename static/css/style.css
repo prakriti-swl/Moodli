@@ -11,20 +11,38 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 1rem 2rem;
-    background: white;
-    box-shadow: 0 2px 8px #dcdcdc;
+    background: #3f4766;
+    box-shadow: 0 2px 8px #C2CBD3;
     align-items: center;
 }
 
 .logo {
     font-size: 1.4rem;
     font-weight: 600;
+    color: rgba(255, 255, 255, 0.986);
 }
 
 .profile-wrapper {
     position: relative;
     cursor: pointer;
 }
+
+.profile-wrapper a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.986);
+    font-size: 20px;
+    margin: 0 30px;
+    font-weight: bolder;
+    display: inline-block; 
+    transition: color 0.3s ease, transform 0.2s ease, margin 0.2s ease;
+}
+
+
+.profile-wrapper a:hover {
+    color: #C2CBD3;
+    transform: scale(1.05);
+}
+
 
 .profile-pic {
     border-radius: 50%;
@@ -64,6 +82,26 @@ body {
 .dropdown div:hover {
     background: #efefef;
 }
+
+.dropdown form {
+    padding: 10px;
+}
+
+.dropdown input {
+    width: 100%;
+    font-size: 14px;
+}
+
+.dropdown button {
+    width: 100%;
+    margin-top: 8px;
+    background: #4a6cf7;
+    color: white;
+    border: none;
+    padding: 6px;
+    border-radius: 6px;
+}
+
 
 
 /* LOGIN and SIGNUP */

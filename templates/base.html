@@ -20,18 +20,44 @@
 
     <div class="profile-wrapper">
         {% if user.is_authenticated %}
-            <a href="{% url 'home' %}" style= " color: black; text-decoration : none; margin : 0 20px;" >Home</a>
-            <a href="{% url 'daily-moods' %}" style= " color: black; text-decoration : none; margin : 0 20px" >Daily Moods</a>
-            <a href="{% url 'dashboard' %}" style= " color: black; text-decoration : none; margin : 0 10px" >Dashboard</a>
-            <a href="{% url 'logout' %}" style= " color: black; text-decoration : none; margin : 0 20px" >Logout</a>
+            <a href="{% url 'home' %}"  >Home</a>
+            <a href="{% url 'daily-moods' %}" >Daily Moods</a>
+            <a href="{% url 'dashboard' %}" >Dashboard</a>
+            <a href="{% url 'logout' %}"  >Logout</a>
         {% else %}
-            <a href="{% url 'login' %}" style= " color: black;  text-decoration : none; margin : 0 10px" >Login</a>
-            <a href="{% url 'signup' %}" style= "color:black; text-decoration : none; margin : 0 20px" >Sign Up</a>
+            <a href="{% url 'login' %}" >Login</a>
+            <a href="{% url 'signup' %}" >Sign Up</a>
         {% endif %}
 
-        <img src="https://i.pravatar.cc/40"
-             class="profile-pic"
-             id="profileMenuBtn">
+        {% if user.is_authenticated %}
+            {% with profile=user.profile|default_if_none:None %}
+                <img src="{{ profile.avatar.url|default:'/media/avatars/default.png' }}"
+                    class="profile-pic"
+                    id="profileMenuBtn">
+
+                <div class="dropdown" id="profileDropdown">
+                    <a href="{{ profile.avatar.url|default:'/media/avatars/default.png' }}"
+                    target="_blank">
+                        View Profile Picture
+                    </a>
+
+                    <form method="POST"
+                        action="{% url 'change-avatar' %}"
+                        enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {% if profile and profile.can_change_avatar %}
+                            <input type="file" name="avatar" required>
+                            <button type="submit">Change Picture</button>
+                        {% else %}
+                            <small>You can change picture every 15 days.</small>
+                        {% endif %}
+                    </form>
+                </div>
+            {% endwith %}
+        {% endif %}
+
+
     </div>
 </header>
 

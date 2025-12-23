@@ -27,18 +27,7 @@ const closePopupBtn = document.getElementById("closePopup");
 
 // let loggedIn = false;
 let chart = null;
-
-// ================== LOGIN STATE ==================
-// fetch("/admin/", { method: "GET" })
-//     .then(res => {
-//         if (!res.redirected) {
-//             loggedIn = true;
-//             if (usernameDisplay) {
-//                 usernameDisplay.textContent = "User";
-//             }
-//         }
-//         updateDropdown();
-//     });
+;
 
 // ================== DROPDOWN ==================
 if (profileBtn) {
@@ -47,29 +36,6 @@ if (profileBtn) {
     };
 }
 
-// function updateDropdown() {
-//     if (!dropdown) return;
-
-//     dropdown.innerHTML = "";
-
-//     if (!loggedIn) {
-//         dropdown.innerHTML = `
-//             <div onclick="handleDropdownAction('/admin/login/')">Login</div>
-//         `;
-//     } else {
-//         dropdown.innerHTML = `
-//             <div onclick="handleDropdownAction('/dashboard/')">Dashboard</div>
-//             <div onclick="handleDropdownAction('/admin/logout/')">Logout</div>
-//         `;
-//     }
-// }
-
-// function handleDropdownAction(action) {
-//     dropdown.classList.remove("show");
-//     setTimeout(() => {
-//         window.location.href = action;
-//     }, 200);
-// }
 
 // ================== CLOSE DROPDOWN ON OUTSIDE CLICK ==================
 document.addEventListener("click", (e) => {

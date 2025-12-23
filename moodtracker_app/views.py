@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, View
+from .models import Profile
 from django.utils import timezone
 from datetime import date, timedelta  
 
@@ -155,3 +156,15 @@ class MonthlyMoodAPI(APIView):
         
         serializer = MoodLogSerializer(logs, many=True)
         return Response(serializer.data)
+
+# ------ PROFILE PIC -------
+class ChangeAvatarView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+
+        if profile.can_change_avatar() and "avatar" in request.FILES:
+            profile.avatar = request.FILES["avatar"]
+            profile.last_changed = timezone.now()
+            profile.save()
+
+        return redirect(request.META.get("HTTP_REFERER", "/"))
