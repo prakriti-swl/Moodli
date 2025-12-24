@@ -162,7 +162,7 @@ class ChangeAvatarView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         profile, _ = Profile.objects.get_or_create(user=request.user)
 
-        if profile.can_change_avatar() and "avatar" in request.FILES:
+        if "avatar" in request.FILES:   # 🔥 removed restriction
             profile.avatar = request.FILES["avatar"]
             profile.last_changed = timezone.now()
             profile.save()

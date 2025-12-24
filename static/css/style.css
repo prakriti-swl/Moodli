@@ -1,3 +1,7 @@
+:root {
+    --gold: #E9C78C;
+}
+
 body {
     margin: 0;
     font-family: Poppins, sans-serif;
@@ -10,10 +14,18 @@ body {
     z-index: 1000;
     display: flex;
     justify-content: space-between;
+    height: 50px;
     padding: 1rem 2rem;
     background: #3f4766;
     box-shadow: 0 2px 8px #C2CBD3;
     align-items: center;
+}
+
+.profile-wrapper a.active {
+    color: var(--gold);
+    font-weight: 600;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 2px;
 }
 
 .logo {
@@ -25,6 +37,7 @@ body {
 .profile-wrapper {
     position: relative;
     cursor: pointer;
+    
 }
 
 .profile-wrapper a {
@@ -39,8 +52,8 @@ body {
 
 
 .profile-wrapper a:hover {
-    color: #C2CBD3;
-    transform: scale(1.05);
+    color: var(--gold);
+    transform: translateY(-1px);
 }
 
 
@@ -55,11 +68,13 @@ body {
     position: absolute;
     right: 0;
     top: 55px;
-    width: 160px;
+    width: 240px;
+    padding: 8px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px #ccc;
     padding: 10px 0;
+    overflow: hidden;
 
     opacity: 0;
     transform: translateY(-8px);
@@ -79,28 +94,50 @@ body {
     cursor: pointer;
 }
 
-.dropdown div:hover {
-    background: #efefef;
+.dropdown-card {
+    background: #edeffc;
+    width: 90%;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 0 auto 10px auto;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    cursor: pointer;
+    text-decoration: none;
+
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-sizing: border-box;
 }
 
-.dropdown form {
-    padding: 10px;
+.dropdown-card:hover {
+    background: #d7ddfc;
+    transform: translateY(-2px);
 }
+
+.dropdown-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #3f4766;
+    white-space: nowrap;
+    margin: 0;   
+}
+
 
 .dropdown input {
     width: 100%;
     font-size: 14px;
 }
 
-.dropdown button {
-    width: 100%;
-    margin-top: 8px;
-    background: #4a6cf7;
-    color: white;
-    border: none;
-    padding: 6px;
-    border-radius: 6px;
-}
+/* .dropdown-info {
+    font-size: 13px;
+    color: #777;
+    text-align: center;
+    margin-top: 6px;
+} */
 
 
 
@@ -122,17 +159,13 @@ body {
 
 
 .auth-container {
-    position: absolute;
     border-radius: 20px;
-    top: 25%; 
-    left: 50%;
-    transform: translateX(-50%); /* This centers the box horizontally */
-    width: 35%; 
-    height: 45%;
+    width: 35%;
     padding: 40px;
     background-color: #ffffffee;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 
 .auth-container h2 {
     text-align: center;
@@ -147,6 +180,7 @@ body {
 
 .auth-container label{
     font-size: 20px;
+    width: 40%;
 }
 
 .auth-container input {
@@ -154,9 +188,15 @@ body {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    width: 65%;
+    width: 90%;
     height: auto;
     font-size: 18px;
+}
+
+.auth-container form > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .auth-container button {
@@ -312,12 +352,12 @@ body {
 
 
 .intro-right h2 {
-    font-size: 2.2rem;   /* increase heading size */
+    font-size: 2.3rem;   
     font-weight: 700;
 }
 
 .intro-right .subtitle {
-    font-size: 1.3rem;   /* increase paragraph size */
+    font-size: 1.4rem;   
     font-weight: 500;
     color: #666;
 }
@@ -372,14 +412,19 @@ body {
 
 /* CHOOSE DATE */
 .date {
-    margin: 20px 0;
+    margin: 20px 40px;
 }
+
 .date label{
-    font-size: larger;
+    font-size: 22px;
     margin-bottom: 10px;
 }
 
 .date input{
+    width: 10%;
+    height: 18px;
+    font-size: 18px;
+    margin-top: 10px;
     padding: 5px;
     border-radius: 8px;
     text-align: center;
@@ -387,8 +432,16 @@ body {
 }
 
 .date button{
+    margin-left: 10px;
+    border-radius: 5px;
     padding: 5px;
     width: 60px;
+    font-size: 16px;
+}
+
+.date button:hover{
+    background-color: lightgrey;
+    cursor: pointer;
 }
 
 /* WEEKLY CHART */

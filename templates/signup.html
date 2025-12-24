@@ -10,19 +10,25 @@
 
             <div>
                 <label>Username</label>
-                <input type="text" name="username" required>
+                <input type="text" name="username" required autocomplete="off">
                 {{ form.username.errors }}
             </div>
 
             <div>
+                <label>Email</label>
+                <input type="Email" name="email" required autocomplete="off">
+                {{ form.email.errors }}
+            </div>
+
+            <div>
                 <label>Password</label>
-                <input type="password" name="password1" required>
+                <input type="password" id="password" name="password1" required>
                 {{ form.password1.errors }}
             </div>
 
             <div>
                 <label>Confirm Password</label>
-                <input type="password" name="password2" required>
+                <input type="password" id="password_confirm" name="password2" required>
                 {{ form.password2.errors }}
             </div>
 
@@ -35,4 +41,18 @@
         <a href="{% url 'login' %}" style = "text-decoration : none;">Login</a>
     </div>
 </div>
+
+
+<script>
+const password = document.getElementById("password");
+const confirm = document.getElementById("password_confirm");
+
+confirm.addEventListener("input", () => {
+  if (confirm.value !== password.value) {
+    confirm.setCustomValidity("Passwords do not match");
+  } else {
+    confirm.setCustomValidity("");
+  }
+});
+</script>
 {% endblock %}
