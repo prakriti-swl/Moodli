@@ -88,7 +88,6 @@ class DailyMoodListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
     login_url = "/admin/login/"
@@ -100,19 +99,21 @@ class LogMoodAPI(APIView):
 
     def post(self, request):
         # Set the local timezone
-        local_tz = pytz.timezone('Asia/Kathmandu')  # Nepal's time zone
+        local_tz = pytz.timezone('Asia/Kathmandu') 
         
         # Get the current local time in Nepal
         local_time = datetime.now(local_tz) 
 
-        # Step 3: Prepare the data for the MoodLog
+        # Prepare the data for the MoodLog
         data = {
             "user": request.user.id,
             "mood": request.data.get("mood"),
+            "tag": request.data.get("tag"),
+            "tag_emoji": request.data.get("tag_emoji"),
             "date": local_time  # Set the date to the current local time in Nepal
         }
         
-        # Step 4: Serialize and save the MoodLog
+        # Serialize and save the MoodLog
         serializer = MoodLogSerializer(data=data)
 
         if serializer.is_valid():
@@ -126,10 +127,14 @@ class WeeklyMoodAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        today = timezone.localdate()
+        date_str = request.GET.get("date")
 
-        # Monday of current week
-        monday = today - timedelta(days=today.weekday())
+        if date_str:
+            selected_date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date()
+        else:
+            selected_date = timezone.localdate()
+
+        monday = selected_date - timedelta(days=selected_date.weekday())
         sunday = monday + timedelta(days=6)
 
         logs = MoodLog.objects.filter(
@@ -139,6 +144,23 @@ class WeeklyMoodAPI(APIView):
 
         serializer = MoodLogSerializer(logs, many=True)
         return Response(serializer.data)
+
+    # permission_classes = [IsAuthenticated]
+
+    # def get(self, request):
+    #     today = timezone.localdate()
+
+    #     # Monday of current week
+    #     monday = today - timedelta(days=today.weekday())
+    #     sunday = monday + timedelta(days=6)
+
+    #     logs = MoodLog.objects.filter(
+    #         user=request.user,
+    #         date__range=[monday, sunday]
+    #     ).order_by("date")
+
+    #     serializer = MoodLogSerializer(logs, many=True)
+    #     return Response(serializer.data)
 
 
 # ---------------- MONTHLY MOOD ----------------

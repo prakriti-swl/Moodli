@@ -6,7 +6,7 @@ function getCookie(name) {
         for (let cookie of cookies) {
             cookie = cookie.trim();
             if (cookie.startsWith(name + "=")) {
-                cookieValue = cookie.substring(name.length + 1);
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
         }
@@ -19,25 +19,22 @@ const csrfToken = getCookie("csrftoken");
 // ================== ELEMENTS ==================
 const profileBtn = document.getElementById("profileMenuBtn");
 const dropdown = document.getElementById("profileDropdown");
-// const usernameDisplay = document.getElementById("usernameDisplay");
 
 const moodPopup = document.getElementById("moodPopup");
 const moodForm = document.getElementById("moodForm");
 const closePopupBtn = document.getElementById("closePopup");
 
-// let loggedIn = false;
-let chart = null;
-;
+const emojiBtn = document.getElementById("emojiBtn");
+const emojiPicker = document.getElementById("emojiPicker");
+const emojiInput = document.getElementById("emojiInput");
+const toast = document.getElementById("toast");
 
 // ================== DROPDOWN ==================
 if (profileBtn) {
-    profileBtn.onclick = () => {
-        dropdown.classList.toggle("show");
-    };
+    profileBtn.onclick = () => dropdown.classList.toggle("show");
 }
 
-
-// ================== CLOSE DROPDOWN ON OUTSIDE CLICK ==================
+// CLOSE DROPDOWN ON OUTSIDE CLICK
 document.addEventListener("click", (e) => {
     if (profileBtn && dropdown &&
         !profileBtn.contains(e.target) &&
@@ -48,48 +45,90 @@ document.addEventListener("click", (e) => {
 
 // ================== POPUP ==================
 document.addEventListener("click", (e) => {
-    if (e.target.id === "logMoodBtn") {
-        // if (!loggedIn) {
-        //     alert("Please login first!");
-        //     return;
-        // }
-        moodPopup.classList.remove("hidden");
-    }
+    if (e.target.id === "logMoodBtn") moodPopup.classList.remove("hidden");
 });
 
-if (closePopupBtn) {
-    closePopupBtn.onclick = () => {
-        moodPopup.classList.add("hidden");
-    };
+if (closePopupBtn) closePopupBtn.onclick = () => moodPopup.classList.add("hidden");
+
+// ================== EMOJI PICKER ==================
+emojiBtn.addEventListener("click", () => emojiPicker.classList.toggle("hidden"));
+
+emojiPicker.querySelectorAll("span").forEach(emoji => {
+    emoji.addEventListener("click", () => {
+        emojiInput.value = emoji.textContent;
+        emojiBtn.textContent = emoji.textContent;
+        emojiPicker.classList.add("hidden");
+    });
+});
+
+// ================== TOAST ==================
+function showToast(message, bgColor) {
+    toast.textContent = message;
+    toast.style.background = bgColor;
+    toast.classList.remove("hidden");
+    setTimeout(() => toast.classList.add("hidden"), 2500);
 }
 
-// ================== SEND MOOD ==================
+// ================== MOOD SUBMISSION (ONE HANDLER) ==================
+let isSubmitting = false;
+
 if (moodForm) {
-    moodForm.onsubmit = function (e) {
+    moodForm.onsubmit = async function(e) {
         e.preventDefault();
+        if (isSubmitting) return;
+        isSubmitting = true;
 
-        const selected = document.querySelector("input[name='mood']:checked");
-        if (!selected) return;
+        const selectedMood = document.querySelector("input[name='mood']:checked");
+        if (!selectedMood) {
+            showToast("Please select a mood", "#ffcccc");
+            isSubmitting = false;
+            return;
+        }
 
-        fetch("/api/log-mood/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken
-            },
-            body: JSON.stringify({ mood: selected.value })
-        })
-        .then(res => res.json())
-        .then(() => {
-            moodPopup.classList.add("hidden");
+        const tag = document.getElementById("tagInput").value;
+        const tagEmoji = document.getElementById("emojiInput").value;
 
-            if (document.getElementById("weeklyChart")) {
-                loadWeeklyData();
-                loadMonthlyData();
+        const saveBtn = document.getElementById("saveMoodBtn");
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
+
+        try {
+            const response = await fetch("/api/log-mood/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
+                },
+                body: JSON.stringify({
+                    mood: selectedMood.value,
+                    tag: tag,
+                    tag_emoji: tagEmoji
+                })
+            });
+
+            if (response.ok) {
+                showToast("Mood Saved!", "#d4f8d4");
+                moodForm.reset();
+                emojiBtn.textContent = "😊";
+                moodPopup.classList.add("hidden");
+
+                if (document.getElementById("weeklyChart")) {
+                    loadWeeklyData();
+                    loadMonthlyData();
+                }
+            } else {
+                showToast("Error saving mood", "#ffcccc");
             }
-        });
+        } catch {
+            showToast("Network error", "#ffcccc");
+        }
+
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save";
+        isSubmitting = false;
     };
 }
+
 
 // ================== MOOD VALUES & COLOR ==================
 const moodValues = {
@@ -218,163 +257,197 @@ function updateMoodCount(moodCount) {
 
 
 // WEEKLY CHART
+//SAFE GLOBAL CHART REFERENCES
+var weeklyLineChart = null;
+var weeklyMoodCountChart = null;
+
+// LOAD WEEKLY DATA
 function loadWeeklyData(selectedDate = new Date()) {
-    fetch("/api/weekly/")
-    .then(res => res.json())
-    .then(data => {
-        const ctx = document.getElementById("weeklyChart");
-        if (!ctx) return;
 
-        data.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const formattedDate = selectedDate.toISOString().split("T")[0];
 
-        // Calculate the start and end of the week based on the selected date
-        const dayOfWeek = selectedDate.getDay();
-        const monday = new Date(selectedDate);
-        monday.setDate(selectedDate.getDate() - ((dayOfWeek + 6) % 7));
-        monday.setHours(0, 0, 0, 0);
+    fetch(`/api/weekly/?date=${formattedDate}`)
+        .then(res => res.json())
+        .then(data => {
 
-        const sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
+            const ctx = document.getElementById("weeklyChart");
+            if (!ctx) return;
 
-        // Filter data for the selected week
-        const weeklyData = data.filter(log => {
-            const d = new Date(log.date);
-            return d >= monday && d <= sunday;
-        });
+            // Sort data by date
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const labels = weeklyData.map(log =>
-            new Date(log.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
-        );
-        const values = weeklyData.map(log => moodValues[log.mood]);
-        const colors = weeklyData.map(log => getMoodColor(moodValues[log.mood]));
+            //LABELS & VALUES
+            const labels = data.map(log =>
+                new Date(log.date).toLocaleDateString(undefined, {
+                    weekday: "short",
+                    month: "short",
+                    day: "numeric"
+                })
+            );
 
-        // Mood count for the week
-        const moodCount = {
-            "Very Sad": 0,
-            "Sad": 0,
-            "Neutral": 0,
-            "Happy": 0,
-            "Very Happy": 0
-        };
-        weeklyData.forEach(log => {
-            if (moodCount.hasOwnProperty(log.mood)) moodCount[log.mood]++;
-        });
+            const values = data.map(log => moodValues[log.mood]);
+            const colors = data.map(log =>
+                getMoodColor(moodValues[log.mood])
+            );
 
-        console.log("Mood Count Data:", moodCount);
+            // MOOD COUNT
+            const moodCount = {
+                "Very Sad": 0,
+                "Sad": 0,
+                "Neutral": 0,
+                "Happy": 0,
+                "Very Happy": 0
+            };
 
-        // If there's already an existing chart, destroy it before creating a new one
-        if (chart) chart.destroy();
-
-        chart = new Chart(ctx, {
-            type: "line",
-            data: {
-                labels,
-                datasets: [{
-                    data: values,
-                    pointBackgroundColor: colors,
-                    pointRadius: 4,
-                    borderWidth: 3,
-                    fill: false,
-                    tension: 0.3,
-                    spanGaps: true,
-                    segment: {
-                        borderColor: ctx => colors[ctx.p1DataIndex] || "#666"
-                    }
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: {
-                        ticks: { autoSkip: false },
-                        title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                    },
-                    
-                    y: {
-                        min: 0,
-                        max: 100,
-                        ticks: {
-                            stepSize: 20,
-                            font: { size: 18 },
-                            callback: v => {
-                                switch(v) {
-                                    case 100: return "😄";
-                                    case 80: return "😊";
-                                    case 60: return "😐";
-                                    case 40: return "😞";
-                                    case 20: return "😢";
-                                    default: return "";
-                                }
-                            }
-                        }
-                    }
+            data.forEach(log => {
+                if (moodCount.hasOwnProperty(log.mood)) {
+                    moodCount[log.mood]++;
                 }
-            },
-            plugins: [dateDividerPlugin]
-        });
+            });
 
-        // pie chart
-        const moodCountCtx = document.getElementById("moodCountChart");
-        if (moodCountCtx) {
-            new Chart(moodCountCtx, {
-                type: 'doughnut',
+            // DESTROY OLD CHARTS
+            if (weeklyLineChart) weeklyLineChart.destroy();
+            if (weeklyMoodCountChart) weeklyMoodCountChart.destroy();
+
+            // WEEKLY LINE CHART
+            weeklyLineChart = new Chart(ctx, {
+                type: "line",
                 data: {
-                    labels: ['Very Sad', 'Sad', 'Neutral', 'Happy', 'Very Happy'],
+                    labels: labels,
                     datasets: [{
-                        data: [
-                            moodCount['Very Sad'],
-                            moodCount['Sad'],
-                            moodCount['Neutral'],
-                            moodCount['Happy'],
-                            moodCount['Very Happy']
-                        ],
-                        backgroundColor: [
-                            "#ff7a7a", "#c1a0ff", "#7db3ff", "#66ea86", "#ffcf5b"
-                        ],
-                        borderWidth: 1,
+                        data: values,
+                        pointBackgroundColor: colors,
+                        pointRadius: 5,
+                        borderWidth: 3,
+                        fill: false,
+                        tension: 0.3,
+                        spanGaps: true,
+                        segment: {
+                            borderColor: ctx =>
+                                colors[ctx.p1DataIndex] || "#666"
+                        }
                     }]
                 },
                 options: {
                     maintainAspectRatio: false,
-                    responsive: true,
-                    cutout: '60%',  // This makes the doughnut larger (reduce the cutout)
-                    rotation: -90, // Starts from the top to make it a half-pie chart
-                    circumference: 180, // Limits the chart to 180 degrees (half-pie)
                     plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { autoSkip: false },
+                            title: {
+                                display: true,
+                                text: "Date",
+                                font: {
+                                    size: 19,       // 👈 increase this
+                                    weight: "bold"  
+                                },
+                                padding: {
+                                    top: 20
+                                }
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20,
+                                font: { size: 18 },
+                                callback: value => {
+                                    switch (value) {
+                                        case 100: return "😄";
+                                        case 80: return "😊";
+                                        case 60: return "😐";
+                                        case 40: return "😞";
+                                        case 20: return "😢";
+                                        default: return "";
+                                    }
                                 }
                             }
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false, // Disable the legend
-                        }
                     }
-                }
+                },
+                plugins: [dateDividerPlugin]
             });
 
-            // After initializing the chart, update the total mood count below the chart
-            const totalMoodCount = Object.values(moodCount).reduce((acc, curr) => acc + curr, 0);
-            const totalMoodElement = document.getElementById("totalMoodCount");
-            if (totalMoodElement) {
-                totalMoodElement.textContent = `${totalMoodCount}`;
+            // MOOD COUNT DOUGHNUT CHART
+            const moodCtx = document.getElementById("moodCountChart");
+            if (moodCtx) {
+                weeklyMoodCountChart = new Chart(moodCtx, {
+                    type: "doughnut",
+                    data: {
+                        labels: [
+                            "Very Sad",
+                            "Sad",
+                            "Neutral",
+                            "Happy",
+                            "Very Happy"
+                        ],
+                        datasets: [{
+                            data: [
+                                moodCount["Very Sad"],
+                                moodCount["Sad"],
+                                moodCount["Neutral"],
+                                moodCount["Happy"],
+                                moodCount["Very Happy"]
+                            ],
+                            backgroundColor: [
+                                "#ff7a7a",
+                                "#c1a0ff",
+                                "#7db3ff",
+                                "#66ea86",
+                                "#ffcf5b"
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        cutout: "60%",
+                        rotation: -90,
+                        circumference: 180,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx =>
+                                        `${ctx.label}: ${ctx.raw}`
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // TOTAL MOOD COUNT
+                const totalMood = Object.values(moodCount)
+                    .reduce((a, b) => a + b, 0);
+
+                const totalEl = document.getElementById("totalMoodCount");
+                if (totalEl) {
+                    totalEl.textContent = totalMood;
+                }
             }
-        }
 
-        // Update mood count badges below the chart
-        updateMoodCount(moodCount);  // Call this function to update badges below the chart
-
+            // BADGES UPDATE
+            updateMoodCount(moodCount);
         });
 }
 
+//DATE PICKER BUTTON
+document.getElementById("loadChartBtn")
+    .addEventListener("click", () => {
+
+        const input = document.getElementById("chartDate").value;
+        if (!input) return;
+
+        loadWeeklyData(new Date(input));
+    });
+
+// LOAD CURRENT WEEK ON PAGE LOAD
+document.addEventListener("DOMContentLoaded", () => {
+    loadWeeklyData(new Date());
+});
 
 
 //MONTHLY CHART

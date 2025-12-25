@@ -1,18 +1,83 @@
 <div class="popup hidden" id="moodPopup">
     <div class="popup-card">
         <span id="closePopup" class="close-btn">✕</span>
-        <h2 class = "popup-title">Log your mood</h2>
+
+        <h2 class="popup-title">Log your mood</h2>
         <hr class="popup-divider">
-        <p class= "popup-subtitle">How is your mood right now ?</p>
+        <p class="popup-subtitle">How is your mood right now?</p>
 
         <form id="moodForm">
-            <label class="mood-option"><input type="radio" name="mood" value="Very Happy"> 😄 Very Happy</label>
-            <label class="mood-option"><input type="radio" name="mood" value="Happy"> 😊 Happy</label>
-            <label class="mood-option"><input type="radio" name="mood" value="Neutral"> 😐 Neutral</label>
-            <label class="mood-option"><input type="radio" name="mood" value="Sad"> 😔 Sad</label>
-            <label class="mood-option"><input type="radio" name="mood" value="Very Sad"> 😢 Very Sad</label>
+            <label class="mood-option">
+                <input type="radio" name="mood" value="Very Happy"> 😄 Very Happy
+            </label>
+            <label class="mood-option">
+                <input type="radio" name="mood" value="Happy"> 😊 Happy
+            </label>
+            <label class="mood-option">
+                <input type="radio" name="mood" value="Neutral"> 😐 Neutral
+            </label>
+            <label class="mood-option">
+                <input type="radio" name="mood" value="Sad"> 😔 Sad
+            </label>
+            <label class="mood-option">
+                <input type="radio" name="mood" value="Very Sad"> 😢 Very Sad
+            </label>
 
-            <button type="submit" class="log-btn">Save</button>
+            <!-- TAG -->
+            <div class="tag-wrapper">
+                <label class="tag-label">Add a tag (optional)</label>
+
+                <div class="tag-input-row">
+                    <input
+                        type="text"
+                        id="tagInput"
+                        placeholder="e.g. School, Friends"
+                        maxlength="20"
+                        autocomplete="off"
+                    />
+
+                    <input
+                        type="text"
+                        id="emojiInput"
+                        readonly
+                        style="display:none;"
+                    />
+
+                    <button type="button" id="emojiBtn" class="emoji-btn">😊</button>
+                </div>
+
+                <div id="emojiPicker" class="emoji-picker hidden">
+                    <span>😀</span><span>😄</span><span>😊</span><span>😐</span>
+                    <span>😔</span><span>😢</span><span>😡</span><span>😍</span>
+                    <span>🤯</span><span>🥳</span><span>😴</span><span>🤒</span>
+                </div>
+            </div>
+
+            <button type="submit" class="log-btn" id="saveMoodBtn">Save</button>
         </form>
     </div>
 </div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<style>
+.emoji-picker {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+.emoji-picker span { font-size: 22px; cursor: pointer; }
+.hidden { display: none; }
+.emoji-btn {border-radius: 6px; padding: 6px 10px; cursor: pointer;}
+.toast { position: fixed; top: 20px; right: 20px; padding: 12px 18px; border-radius: 8px; font-weight: 500; color: #155724; z-index: 9999; }
+.toast.hidden { opacity: 0; pointer-events: none; }
+.emoji-btn:hover { background-color: lightgray; }
+</style>
+
+

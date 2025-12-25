@@ -14,7 +14,10 @@ class MoodLog(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     mood = models.CharField(max_length=20, choices=MOOD_CHOICES)
-    date = models.DateTimeField(auto_now_add=True)  # Changed from DateField to DateTimeField
+    date = models.DateTimeField(auto_now_add=True)
+    tag = models.CharField(max_length=20, blank=True, null=True)
+    tag_emoji = models.CharField(max_length=10, blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.user.username} - {self.mood} on {self.date}"
