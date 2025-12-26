@@ -331,7 +331,19 @@ function loadWeeklyData(selectedDate = new Date()) {
                 options: {
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                    
+                        tooltip: {
+                            displayColors: true,
+                            callbacks: {
+                                title: function (tooltipItems) {
+                                    return tooltipItems[0].label; // keeps date
+                                },
+                                label: function () {
+                                    return " "; // removes the count/value
+                                }
+                            }
+                        }
                     },
                     scales: {
                         x: {

@@ -267,6 +267,21 @@ body {
 .mood-left {
     display: flex;
     align-items: center;
+    gap: 10px;
+}
+
+.mood-center {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #444;
+    transform: translateX(-160px);
+}
+
+.tag-emoji {
+    font-size: 18px;
+    margin-right: 6px;
 }
 
 .mood-icon {

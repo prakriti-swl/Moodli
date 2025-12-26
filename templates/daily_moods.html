@@ -28,6 +28,15 @@
                                 <span class="mood-label">{{ mood.mood }}</span>
                             </div>
                         </div>
+
+                        <!-- CENTER: User tag + emoji -->
+                        <div class="mood-center">
+                            {% if mood.tag or mood.tag_emoji %}
+                                <span class="tag-emoji">{{ mood.tag_emoji }}</span>
+                                <span class="tag-text">{{ mood.tag }}</span>
+                            {% endif %}
+                        </div>
+
                         <!-- Time displayed on the right side -->
                         <div class="mood-time">
                             {% if mood.date %}
